@@ -1,0 +1,32 @@
+version: '3.8'
+
+networks:
+  appnet:
+    driver: bridge
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    # no explicit networks defined → uses default network
+    # Ensure your backend app listens on 0.0.0.0:8000
+    networks:
+      - appnet
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "8501:8501"
+    depends_on:
+      - backend
+    environment:
+      - API_URL=http://backend:8000
+    networks:
+      - appnet
+    dns: 
+      - 8.8.8.8
+      - 1.1.1.1

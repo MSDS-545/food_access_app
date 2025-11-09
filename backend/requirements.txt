@@ -1,0 +1,6 @@
+fastapi
+uvicorn
+pydantic
+numpy
+scikit-learn
+# plus any other libs your model/preprocessing uses
