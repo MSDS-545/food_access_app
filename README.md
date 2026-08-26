@@ -1,56 +1,130 @@
 # Food Access Prediction App
 
-This repository contains a full-stack application for predicting whether a census tract is Low Income & Low Access (LILA) using a machine learning model.
+A full-stack application for predicting whether a census tract is classified as Low Income & Low Access (LILA) using a trained machine learning model.
 
-## Structure
-- `backend/`: FastAPI application serving the model  
-- `frontend/`: Streamlit application for user interaction  
-- `docker-compose.yml`: to build and run both services  
+## Project Structure
 
-## Setup & Run
-1. Place your trained model file (`model.pkl`) and preprocessing pipeline (`preprocessing.pkl`) into the `backend/` folder.  
-2. Adjust feature names/order in `backend/app.py` and `frontend/app.py`.  
-3. Choose your run mode:
+```text
+.
+├── backend/              # FastAPI application and model files
+├── frontend/             # Streamlit user interface
+└── docker-compose.yml    # Multi-container configuration
+```
 
-### 🏃 Run Locally (without Docker)
+## Requirements
+
+- Python 3.10+
+- `pip`
+- Docker and Docker Compose (optional)
+- A trained model file (`model.pkl`)
+- A preprocessing pipeline (`preprocessing.pkl`)
+
+## Setup
+
+Place the trained model and preprocessing files in the `backend/` directory:
+
+```text
+backend/
+├── app.py
+├── model.pkl
+├── preprocessing.pkl
+└── requirements.txt
+```
+
+Update the feature names and feature order in `backend/app.py` and `frontend/app.py` so they match the model used during training.
+
+## Run Locally
+
+### Backend
+
+From the project root:
+
 ```bash
-# Backend
 cd backend
-python3 -m venv .venv
-source .venv/bin/activate     # On Windows: .venv\Scripts\activate
-pip install -r requirements.txt
-uvicorn app:app --reload --host 0.0.0.0 --port 8000
 
-# Frontend (in new terminal)
-cd ../frontend
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
+
+uvicorn app:app --reload --host 0.0.0.0 --port 8000
+```
+
+On Windows PowerShell, activate the environment with:
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+```
+
+The FastAPI documentation will be available at:
+
+```text
+http://localhost:8000/docs
+```
+
+### Frontend
+
+Open a second terminal and run:
+
+```bash
+cd frontend
+
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+
 streamlit run app.py
+```
 
-Then open your browser:
+The Streamlit interface will be available at:
 
-Backend docs: http://localhost:8000/docs
-
-Frontend UI: http://localhost:8501
-
-🐳 Run with Docker / Docker Compose
-
-From project root:
-
-docker compose up --build
-
-
-After build completes, open your browser:
-
+```text
 http://localhost:8501
+```
 
-The frontend will automatically connect to the backend service at http://backend:8000.
+## Run with Docker Compose
 
-Customization
+From the project root:
 
-Update the feature list and UI inputs as per your model.
+```bash
+docker compose up --build
+```
 
-Add environment variables, authentication, CORS, logging as needed.
+Open the application at:
 
-Deploy to cloud (e.g., AWS, GCP, Azure) by pushing Docker images.
+```text
+http://localhost:8501
+```
+
+Within the Docker network, the frontend connects to the backend at:
+
+```text
+http://backend:8000
+```
+
+To stop the containers:
+
+```bash
+docker compose down
+```
+
+## Configuration
+
+Before running the application with a different model:
+
+1. Update the feature list and input order in the backend.
+2. Update the corresponding Streamlit input fields.
+3. Confirm that preprocessing matches the pipeline used during model training.
+4. Add required environment variables for the deployment environment.
+
+## Deployment
+
+The application can be deployed using its Docker configuration to services such as AWS, Google Cloud, or Microsoft Azure.
+
+For production deployment, consider adding:
+
+- Authentication and authorization
+- CORS configuration
+- Application logging
+- Environment-based configuration
+- Health checks
+- Monitoring
